@@ -1,11 +1,12 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { TmbdService } from '../../service/tmbd.service';
 import { Movie, MovieApiResponse } from '../../service/model/movie.model';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [],
+  imports: [FontAwesomeModule],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss'
 })
