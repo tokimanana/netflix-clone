@@ -13,6 +13,7 @@ import {
 import { MovieApiResponse } from './model/movie.model';
 import { State } from './model/state.model';
 import { environment } from '../../environments/environment';
+import { GenresResponse } from './model/genre.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,14 +30,18 @@ export class TmbdService {
   );
   fetchtrendMovie = computed(() => this.fetchTrendMovies$());
 
+  private genres$: WritableSignal<
+    State<GenresResponse, HttpErrorResponse>
+  > = signal(
+    State.Builder<GenresResponse, HttpErrorResponse>().forInit().build()
+  );
+  genres = computed(() => this.genres$());
+
+
   getTrends(): void {
-    let headers: HttpHeaders = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${environment.TMDB_API_KEY}`
-    );
     this.http
       .get<MovieApiResponse>(`${this.baseUrl}/3/trending/movie/day`, {
-        headers,
+        headers: this.getHeaders(),
       })
       .subscribe({
         next: (tmbdResponse) =>
@@ -54,9 +59,37 @@ export class TmbdService {
       });
   }
 
+  getHeaders(): HttpHeaders {
+    return new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${environment.TMDB_API_KEY}`
+    );
+  }
+
+  getAllGenres(): void {
+    this.http
+      .get<GenresResponse>(`${this.baseUrl}/3/genre/movie/list`, {
+        headers: this.getHeaders(),
+      })
+      .subscribe({
+        next: genresResponse =>
+          this.genres$.set(
+            State.Builder<GenresResponse, HttpErrorResponse>()
+              .forSuccess(genresResponse)
+              .build()
+          ),
+        error: (err) =>
+          this.genres$.set(
+            State.Builder<GenresResponse, HttpErrorResponse>()
+              .forError(err)
+              .build()
+          ),
+      });
+  }
+
   constructor() {}
 
-  getImageUrl(id: string, size: 'original' | 'w-500' | 'w-200' ): string {
+  getImageUrl(id: string, size: 'original' | 'w-500' | 'w-200'): string {
     return `https://image.tmdb.org/t/p/${size}/${id}`;
   }
 }

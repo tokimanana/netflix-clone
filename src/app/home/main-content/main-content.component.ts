@@ -12,7 +12,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 })
 export class MainContentComponent implements OnInit {
 
-  readonly tmbdService = inject(TmbdService);
+  readonly tmdbService = inject(TmbdService);
 
   trendMovie: Movie | undefined;
 
@@ -22,7 +22,7 @@ export class MainContentComponent implements OnInit {
 
   constructor() {
     effect(()=>{
-      const trendMovieResponse: MovieApiResponse | undefined = this.tmbdService.fetchtrendMovie().value;
+      const trendMovieResponse: MovieApiResponse | undefined = this.tmdbService.fetchtrendMovie().value;
       if(trendMovieResponse) {
         this.trendMovie = trendMovieResponse.results[0];
       }
@@ -30,6 +30,6 @@ export class MainContentComponent implements OnInit {
   }
 
   fetchMovieTrends(): void {
-    this.tmbdService.getTrends();
+    this.tmdbService.getTrends();
   }
 }
