@@ -1,0 +1,4 @@
+@if(trendMovie) {
+  <div class="main w-100 m-0 p-0 d-flex justify-content align-items-center"
+  [style.background-image]="'url(' + tmbdService.getImageUrl(trendMovie.poster_path, 'original' ) + ')'"></div>
+}
