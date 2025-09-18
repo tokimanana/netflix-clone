@@ -2,6 +2,7 @@ import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
+  HttpParams,
 } from '@angular/common/http';
 import {
   computed,
@@ -36,6 +37,13 @@ export class TmbdService {
     State.Builder<GenresResponse, HttpErrorResponse>().forInit().build()
   );
   genres = computed(() => this.genres$());
+
+  private moviesByGenre$: WritableSignal<
+    State<MovieApiResponse, HttpErrorResponse>
+  > = signal(
+    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
+  );
+  moviesByGenre = computed(() => this.genres$());
 
 
   getTrends(): void {
@@ -81,6 +89,34 @@ export class TmbdService {
         error: (err) =>
           this.genres$.set(
             State.Builder<GenresResponse, HttpErrorResponse>()
+              .forError(err)
+              .build()
+          ),
+      });
+  }
+
+  getMoviesByGenre(genreId: string): void {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.set('language', 'en-US');
+    queryParams = queryParams.set('with_genres', genreId);
+
+    this.http
+      .get<MovieApiResponse>(`${this.baseUrl}/3/genre/movie/list`, {
+        headers: this.getHeaders(),
+        params: queryParams
+      })
+      .subscribe({
+        next: moviesByGenreResponse => {
+          moviesByGenreResponse.genreId = +genreId
+          this.moviesByGenre$.set(
+            State.Builder<MovieApiResponse, HttpErrorResponse>()
+              .forSuccess(moviesByGenreResponse)
+              .build()
+          )
+        },
+        error: (err) =>
+          this.moviesByGenre$.set(
+            State.Builder<MovieApiResponse, HttpErrorResponse>()
               .forError(err)
               .build()
           ),

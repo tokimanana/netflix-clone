@@ -1,6 +1,6 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { TmbdService } from '../service/tmbd.service';
-import { Genre, GenresResponse } from '../service/model/genre.model';
+import { TmbdService } from '../../service/tmbd.service';
+import { Genre, GenresResponse } from '../../service/model/genre.model';
 
 @Component({
   selector: 'app-movie-selector',
@@ -29,5 +29,4 @@ export class MovieSelectorComponent implements OnInit{
   fetchAllGenres() {
     this.tmdbService.getAllGenres();
   }
-
 }
