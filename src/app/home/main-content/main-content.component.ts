@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { TmbdService } from '../../service/tmbd.service';
+import { TmdbService } from '../../service/tmdb.service';
 import { Movie, MovieApiResponse } from '../../service/model/movie.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -8,11 +8,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   standalone: true,
   imports: [FontAwesomeModule],
   templateUrl: './main-content.component.html',
-  styleUrl: './main-content.component.scss'
+  styleUrl: './main-content.component.scss',
 })
 export class MainContentComponent implements OnInit {
-
-  readonly tmdbService = inject(TmbdService);
+  readonly tmdbService = inject(TmdbService);
 
   trendMovie: Movie | undefined;
 
@@ -21,12 +20,13 @@ export class MainContentComponent implements OnInit {
   }
 
   constructor() {
-    effect(()=>{
-      const trendMovieResponse: MovieApiResponse | undefined = this.tmdbService.fetchtrendMovie().value;
-      if(trendMovieResponse) {
+    effect(() => {
+      const trendMovieResponse: MovieApiResponse | undefined =
+        this.tmdbService.fetchtrendMovie().value;
+      if (trendMovieResponse) {
         this.trendMovie = trendMovieResponse.results[0];
       }
-    })
+    });
   }
 
   fetchMovieTrends(): void {

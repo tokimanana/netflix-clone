@@ -19,7 +19,7 @@ import { GenresResponse } from './model/genre.model';
 @Injectable({
   providedIn: 'root',
 })
-export class TmbdService {
+export class TmdbService {
   http = inject(HttpClient);
 
   baseUrl: string = 'https://api.themoviedb.org';
@@ -31,11 +31,10 @@ export class TmbdService {
   );
   fetchtrendMovie = computed(() => this.fetchTrendMovies$());
 
-  private genres$: WritableSignal<
-    State<GenresResponse, HttpErrorResponse>
-  > = signal(
-    State.Builder<GenresResponse, HttpErrorResponse>().forInit().build()
-  );
+  private genres$: WritableSignal<State<GenresResponse, HttpErrorResponse>> =
+    signal(
+      State.Builder<GenresResponse, HttpErrorResponse>().forInit().build()
+    );
   genres = computed(() => this.genres$());
 
   private moviesByGenre$: WritableSignal<
@@ -43,8 +42,7 @@ export class TmbdService {
   > = signal(
     State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
   );
-  moviesByGenre = computed(() => this.genres$());
-
+  moviesByGenre = computed(() => this.moviesByGenre$());
 
   getTrends(): void {
     this.http
@@ -52,10 +50,10 @@ export class TmbdService {
         headers: this.getHeaders(),
       })
       .subscribe({
-        next: (tmbdResponse) =>
+        next: (tmdbResponse) =>
           this.fetchTrendMovies$.set(
             State.Builder<MovieApiResponse, HttpErrorResponse>()
-              .forSuccess(tmbdResponse)
+              .forSuccess(tmdbResponse)
               .build()
           ),
         error: (err) =>
@@ -80,7 +78,7 @@ export class TmbdService {
         headers: this.getHeaders(),
       })
       .subscribe({
-        next: genresResponse =>
+        next: (genresResponse) =>
           this.genres$.set(
             State.Builder<GenresResponse, HttpErrorResponse>()
               .forSuccess(genresResponse)
@@ -95,24 +93,24 @@ export class TmbdService {
       });
   }
 
-  getMoviesByGenre(genreId: string): void {
+  getMoviesByGenre(genreId: number): void {
     let queryParams = new HttpParams();
     queryParams = queryParams.set('language', 'en-US');
     queryParams = queryParams.set('with_genres', genreId);
 
     this.http
-      .get<MovieApiResponse>(`${this.baseUrl}/3/genre/movie/list`, {
+      .get<MovieApiResponse>(`${this.baseUrl}/3/discover/movie`, {
         headers: this.getHeaders(),
-        params: queryParams
+        params: queryParams,
       })
       .subscribe({
-        next: moviesByGenreResponse => {
-          moviesByGenreResponse.genreId = +genreId
+        next: (moviesByGenreResponse) => {
+          moviesByGenreResponse.genreId = +genreId;
           this.moviesByGenre$.set(
             State.Builder<MovieApiResponse, HttpErrorResponse>()
               .forSuccess(moviesByGenreResponse)
               .build()
-          )
+          );
         },
         error: (err) =>
           this.moviesByGenre$.set(
@@ -125,7 +123,7 @@ export class TmbdService {
 
   constructor() {}
 
-  getImageUrl(id: string, size: 'original' | 'w-500' | 'w-200'): string {
+  getImageUrl(id: string, size: 'original' | 'w500' | 'w200'): string {
     return `https://image.tmdb.org/t/p/${size}/${id}`;
   }
 }
