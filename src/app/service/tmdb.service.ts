@@ -123,7 +123,7 @@ export class TmdbService {
 
   constructor() {}
 
-  getImageUrl(id: string, size: 'original' | 'w500' | 'w200'): string {
+  getImageUrl(id: string, size: 'original' | 'w500' | 'w300' | 'w200'): string {
     return `https://image.tmdb.org/t/p/${size}/${id}`;
   }
 }
