@@ -11,7 +11,7 @@ import { MovieListComponent } from "./movie-list/movie-list.component";
   styleUrl: './movie-selector.component.scss',
 })
 export class MovieSelectorComponent implements OnInit {
-  tmdbService = inject(TmdbService);
+  private readonly tmdbService = inject(TmdbService);
 
   genres: Genre[] | undefined;
 
