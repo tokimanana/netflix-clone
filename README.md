@@ -6,6 +6,7 @@ Un clone de l'interface Netflix développé avec Angular 17, permettant de parco
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.x-purple)
 
+
 ## 📋 Objectif du Projet
 
 Ce projet a été créé dans un objectif pédagogique de montée en compétences sur les technologies suivantes :
@@ -81,7 +82,7 @@ src/
 
 1. **Cloner le repository**
 ```bash
-git clone <votre-repo>
+git clone https://github.com/tokimanana/netflix-clone.git
 cd netflix-clone
 ```
 
