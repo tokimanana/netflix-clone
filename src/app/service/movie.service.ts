@@ -94,14 +94,14 @@ export class MovieService {
   }
 
   getMoviesByGenre(genreId: number): void {
-    let queryParams = new HttpParams();
-    queryParams = queryParams.set('language', 'en-US');
-    queryParams = queryParams.set('with_genres', genreId);
+    const params = new HttpParams()
+      .set('language', 'en-US')
+      .set('with_genres', genreId);
 
     this.http
       .get<MovieApiResponse>(`${this.baseUrl}/3/discover/movie`, {
         headers: this.getHeaders(),
-        params: queryParams,
+        params: params,
       })
       .subscribe({
         next: (moviesByGenreResponse) => {
