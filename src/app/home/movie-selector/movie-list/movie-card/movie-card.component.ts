@@ -1,6 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { Movie } from '../../../../service/model/movie.model';
-import { TmdbService } from '../../../../service/movie.service';
+
+import { MovieService } from './../../../../service/movie.service';
 
 @Component({
   selector: 'app-movie-card',
@@ -12,5 +13,5 @@ import { TmdbService } from '../../../../service/movie.service';
 export class MovieCardComponent {
   @Input() movie: Movie | undefined;
 
-  readonly tmdbService = inject(TmdbService);
+  readonly movieService = inject(MovieService);
 }

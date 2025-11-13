@@ -2,7 +2,7 @@
   <div class="movie">
     @if(movie.poster_path) {
       <img
-        [src]="tmdbService.getImageUrl(movie.poster_path, 'w300')"
+        [src]="movieService.getImageUrl(movie.poster_path, 'w300')"
         [alt]="movie.title"
         class="movie-poster"
       />
