@@ -1,44 +1,40 @@
 export type StatusNotification = 'OK' | 'ERROR' | 'INIT';
 
-export class State<T, V> {
-  value?: T;
-  error?: V;
-  status: StatusNotification;
+export type State<T, E> =
+  | { status: 'INIT' }
+  | { status: 'OK'; value: T }
+  | { status: 'ERROR'; error: E };
 
-  constructor(status: StatusNotification, value?: T, error?: V) {
-    this.value = value;
-    this.error = error;
-    this.status = status;
-  }
-
-  static Builder<T, V>() {
-    return new StateBuilder<T, V>();
-  }
+//Helper functions (plus simple que Builder)
+export function initState<T, E>(): State<T, E> {
+  return { status: 'INIT' };
 }
 
-class StateBuilder<T, V> {
-  private status: StatusNotification = 'INIT';
-  private value?: T;
-  private error?: V;
+export function successState<T, E>(value: T): State<T, E> {
+  return { status: 'OK', value };
+}
 
-  public forError(error: any): StateBuilder<T, V> {
-    this.error = error;
-    this.status = "ERROR";
-    return this;
-  }
+export function errorState<T, E>(error: E): State<T, E> {
+  return { status: 'ERROR', error };
+}
 
-  public forSuccess(value: T): StateBuilder<T, V> {
-    this.value = value;
-    this.status = "OK";
-    return this;
-  }
+//Types Guards
+export function isInit<T, E>(state: State<T, E>): state is { status: 'INIT' } {
+  return state.status === 'INIT';
+}
 
-  public forInit(): StateBuilder<T, V> {
-    this.status = "INIT";
-    return this;
-  }
+export function isSuccess<T, E>(
+  state: State<T, E>
+): state is { status: 'OK'; value: T } {
+  return state.status === 'OK';
+}
 
-  build(): State<T, V> {
-    return new State<T, V>(this.status, this.value, this.error);
-  }
+export function isError<T, E>(
+  state: State<T, E>
+): state is { status: 'ERROR'; error: E } {
+  return state.status === 'ERROR';
+}
+
+export function getValueOrDefault<T, E>(state: State<T, E>, defaultValue: T): T {
+  return isSuccess(state) ? state.value : defaultValue;
 }
