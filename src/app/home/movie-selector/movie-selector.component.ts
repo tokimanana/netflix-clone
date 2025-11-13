@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { TmdbService } from '../../service/movie.service';
+import { MovieService } from '../../service/movie.service';
 import { Genre, GenresResponse } from '../../service/model/genre.model';
 import { MovieListComponent } from './movie-list/movie-list.component';
 
@@ -11,7 +11,7 @@ import { MovieListComponent } from './movie-list/movie-list.component';
   styleUrl: './movie-selector.component.scss',
 })
 export class MovieSelectorComponent implements OnInit {
-  private readonly tmdbService = inject(TmdbService);
+  private readonly movieService = inject(MovieService);
 
   genres: Genre[] | undefined;
 
@@ -22,12 +22,12 @@ export class MovieSelectorComponent implements OnInit {
   constructor() {
     effect(() => {
       let genresResponse =
-        this.tmdbService.genres().value ?? ({ genres: [] } as GenresResponse);
+        this.movieService.genres().value ?? ({ genres: [] } as GenresResponse);
       this.genres = genresResponse.genres;
     });
   }
 
   fetchAllGenres() {
-    this.tmdbService.getAllGenres();
+    this.movieService.getAllGenres();
   }
 }

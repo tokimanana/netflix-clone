@@ -1,5 +1,5 @@
 import { Component, effect, inject, Input, OnInit } from '@angular/core';
-import { TmdbService } from '../../../service/movie.service';
+import { MovieService } from '../../../service/movie.service';
 import { Movie, MovieApiResponse } from '../../../service/model/movie.model';
 import { MovieCardComponent } from './movie-card/movie-card.component';
 
@@ -16,7 +16,7 @@ export class MovieListComponent implements OnInit {
   @Input() genreId = -1;
   @Input() mode: Mode = 'GENRE';
 
-  tmdbService = inject(TmdbService);
+  movieService = inject(MovieService);
 
   moviesByGenre: Movie[] | undefined;
   trendMovies: Movie[] | undefined;
@@ -25,12 +25,12 @@ export class MovieListComponent implements OnInit {
     effect(() => {
       if (this.mode === 'GENRE') {
         const movieByGenreResponse =
-          this.tmdbService.moviesByGenre().value ?? ({} as MovieApiResponse);
+          this.movieService.moviesByGenre().value ?? ({} as MovieApiResponse);
         if (movieByGenreResponse.genreId === this.genreId) {
           this.moviesByGenre = movieByGenreResponse.results;
         }
       } else if (this.mode === 'TREND') {
-        const trendingMoviesResponse = this.tmdbService.fetchtrendMovie().value;
+        const trendingMoviesResponse = this.movieService.fetchtrendMovie().value;
         if (trendingMoviesResponse) {
           this.trendMovies = trendingMoviesResponse.results;
         }
@@ -44,10 +44,10 @@ export class MovieListComponent implements OnInit {
   }
 
   private fetchMoviesByGenre(): void {
-    this.tmdbService.getMoviesByGenre(this.genreId);
+    this.movieService.getMoviesByGenre(this.genreId);
   }
 
   private fetchTrends(): void {
-    this.tmdbService.getTrends();
+    this.movieService.getTrends();
   }
 }
