@@ -4,14 +4,15 @@ import {
   HttpHeaders,
   HttpParams,
 } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { MovieApiResponse } from './model/movie.model';
 import {
-  errorState,
-  initState,
-  State,
-  successState,
-} from './model/state.model';
+  computed,
+  inject,
+  Injectable,
+  signal,
+  WritableSignal,
+} from '@angular/core';
+import { MovieApiResponse } from './model/movie.model';
+import { State } from './model/state.model';
 import { environment } from '../../environments/environment';
 import { GenresResponse } from './model/genre.model';
 
@@ -19,21 +20,28 @@ import { GenresResponse } from './model/genre.model';
   providedIn: 'root',
 })
 export class MovieService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl: string = 'https://api.themoviedb.org';
+  http = inject(HttpClient);
 
-  private trendMovies$ = signal<State<MovieApiResponse, HttpErrorResponse>>(
-    initState()
-  );
-  private genres$ = signal<State<GenresResponse, HttpErrorResponse>>(
-    initState()
-  );
-  private moviesByGenre$ = signal<State<MovieApiResponse, HttpErrorResponse>>(
-    initState()
-  );
+  baseUrl: string = 'https://api.themoviedb.org';
 
-  trendMovies = computed(() => this.trendMovies$());
+  private fetchTrendMovies$: WritableSignal<
+    State<MovieApiResponse, HttpErrorResponse>
+  > = signal(
+    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
+  );
+  fetchtrendMovie = computed(() => this.fetchTrendMovies$());
+
+  private genres$: WritableSignal<State<GenresResponse, HttpErrorResponse>> =
+    signal(
+      State.Builder<GenresResponse, HttpErrorResponse>().forInit().build()
+    );
   genres = computed(() => this.genres$());
+
+  private moviesByGenre$: WritableSignal<
+    State<MovieApiResponse, HttpErrorResponse>
+  > = signal(
+    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
+  );
   moviesByGenre = computed(() => this.moviesByGenre$());
 
   getTrends(): void {
@@ -42,13 +50,22 @@ export class MovieService {
         headers: this.getHeaders(),
       })
       .subscribe({
-        next: (movieResponse) =>
-          this.trendMovies$.set(successState(movieResponse)),
-        error: (err) => this.trendMovies$.set(errorState(err)),
+        next: (tmdbResponse) =>
+          this.fetchTrendMovies$.set(
+            State.Builder<MovieApiResponse, HttpErrorResponse>()
+              .forSuccess(tmdbResponse)
+              .build()
+          ),
+        error: (err) =>
+          this.fetchTrendMovies$.set(
+            State.Builder<MovieApiResponse, HttpErrorResponse>()
+              .forError(err)
+              .build()
+          ),
       });
   }
 
-  private getHeaders(): HttpHeaders {
+  getHeaders(): HttpHeaders {
     return new HttpHeaders().set(
       'Authorization',
       `Bearer ${environment.TMDB_API_KEY}`
@@ -61,37 +78,47 @@ export class MovieService {
         headers: this.getHeaders(),
       })
       .subscribe({
-        next: (genresResponse) => this.genres$.set(successState(genresResponse)),
-        error: (err) => this.genres$.set(errorState(err)),
+        next: (genresResponse) =>
+          this.genres$.set(
+            State.Builder<GenresResponse, HttpErrorResponse>()
+              .forSuccess(genresResponse)
+              .build()
+          ),
+        error: (err) =>
+          this.genres$.set(
+            State.Builder<GenresResponse, HttpErrorResponse>()
+              .forError(err)
+              .build()
+          ),
       });
   }
 
   getMoviesByGenre(genreId: number): void {
-    const params = new HttpParams()
-      .set('language', 'en-US')
-      .set('with_genres', genreId);
+    let queryParams = new HttpParams();
+    queryParams = queryParams.set('language', 'en-US');
+    queryParams = queryParams.set('with_genres', genreId);
 
     this.http
       .get<MovieApiResponse>(`${this.baseUrl}/3/discover/movie`, {
         headers: this.getHeaders(),
-        params: params,
+        params: queryParams,
       })
       .subscribe({
         next: (moviesByGenreResponse) => {
           moviesByGenreResponse.genreId = +genreId;
           this.moviesByGenre$.set(
-            successState(moviesByGenreResponse)
+            State.Builder<MovieApiResponse, HttpErrorResponse>()
+              .forSuccess(moviesByGenreResponse)
+              .build()
           );
         },
         error: (err) =>
           this.moviesByGenre$.set(
-            errorState(err)
+            State.Builder<MovieApiResponse, HttpErrorResponse>()
+              .forError(err)
+              .build()
           ),
       });
-  }
-
-  resetMoviesByGenre(): void {
-    this.moviesByGenre$.set(initState());
   }
 
   constructor() {}
