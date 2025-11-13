@@ -1,7 +1,7 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { TmdbService } from '../../service/tmdb.service';
+import { TmdbService } from '../../service/movie.service';
 import { Genre, GenresResponse } from '../../service/model/genre.model';
-import { MovieListComponent } from "./movie-list/movie-list.component";
+import { MovieListComponent } from './movie-list/movie-list.component';
 
 @Component({
   selector: 'app-movie-selector',

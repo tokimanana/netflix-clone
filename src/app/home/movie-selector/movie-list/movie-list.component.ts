@@ -1,7 +1,7 @@
 import { Component, effect, inject, Input, OnInit } from '@angular/core';
-import { TmdbService } from '../../../service/tmdb.service';
+import { TmdbService } from '../../../service/movie.service';
 import { Movie, MovieApiResponse } from '../../../service/model/movie.model';
-import { MovieCardComponent } from "./movie-card/movie-card.component";
+import { MovieCardComponent } from './movie-card/movie-card.component';
 
 export type Mode = 'GENRE' | 'TREND';
 
@@ -24,7 +24,8 @@ export class MovieListComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.mode === 'GENRE') {
-        const movieByGenreResponse = this.tmdbService.moviesByGenre().value ?? {} as MovieApiResponse;
+        const movieByGenreResponse =
+          this.tmdbService.moviesByGenre().value ?? ({} as MovieApiResponse);
         if (movieByGenreResponse.genreId === this.genreId) {
           this.moviesByGenre = movieByGenreResponse.results;
         }

@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { TmdbService } from '../../service/tmdb.service';
+import { TmdbService } from '../../service/movie.service';
 import { Movie, MovieApiResponse } from '../../service/model/movie.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
