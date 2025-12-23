@@ -5,6 +5,7 @@
         [src]="movieService.getImageUrl(movie.poster_path, 'w300')"
         [alt]="movie.title"
         class="movie-poster"
+        (click)="movieService.openMoreInfos(movie.id)"
       />
     } @else {
       <div class="movie-poster-placeholder d-flex align-items-center justify-content-center">

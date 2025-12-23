@@ -23,7 +23,7 @@
       </a>
       <a class="btn btn-lg btn-light me-3 d-flex align-items-center px-4 py-2">
         <fa-icon class="me-3" icon="circle-info" size="2x" />
-        <div>More Info</div>
+        <div (click)="movieService.openMoreInfos(trendMovie.id)">More Info</div>
       </a>
     </div>
   </div>
