@@ -25,7 +25,7 @@ export class MovieService {
   private readonly http = inject(HttpClient);
   private readonly modalService = inject(NgbModal);
 
-  baseUrl: string = 'https://api.themoviedb.org';
+  readonly baseUrl: string = 'https://api.themoviedb.org';
 
   private fetchTrendMovies$: WritableSignal<
     State<MovieApiResponse, HttpErrorResponse>
@@ -53,6 +53,12 @@ export class MovieService {
     State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
   );
   moviesByGenre = computed(() => this.moviesByGenre$());
+
+  private search$: WritableSignal<
+    State<MovieApiResponse, HttpErrorResponse>
+  > = signal(
+    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
+  )
 
   getTrends(): void {
     this.http
@@ -167,5 +173,30 @@ export class MovieService {
   openMoreInfos(movieId: number): void {
     let moreInfoModal = this.modalService.open(MoreInfosComponent);
     moreInfoModal.componentInstance.movieId = movieId;
+  }
+
+  searchByTerm(term: string): void {
+    let queryParam = new HttpParams();
+    queryParam = queryParam.set('language', 'en-US');
+    queryParam = queryParam.set('query', term);
+    this.http
+      .get<MovieApiResponse>(`${this.baseUrl}/3/search/movie`, {
+        headers: this.getHeaders(),
+        params: queryParam,
+      })
+      .subscribe({
+        next: (searchResponse) =>
+          this.search$.set(
+            State.Builder<MovieApiResponse, HttpErrorResponse>()
+              .forSuccess(searchResponse)
+              .build()
+          ),
+        error: (err) =>
+          this.search$.set(
+            State.Builder<MovieApiResponse, HttpErrorResponse>()
+              .forError(err)
+              .build()
+          ),
+      });
   }
 }
