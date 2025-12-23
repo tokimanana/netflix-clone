@@ -1,4 +1,11 @@
-import { Component, effect, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { MovieService } from '../../service/movie.service';
 import { Movie } from '../../service/model/movie.model';
 import { CommonModule } from '@angular/common';
@@ -8,11 +15,10 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './more-infos.component.html',
-  styleUrl: './more-infos.component.scss'
+  styleUrls: ['./more-infos.component.scss'],
 })
-export class MoreInfosComponent implements OnInit, OnDestroy{
-
-  @Input() movieId: number = -1;
+export class MoreInfosComponent implements OnInit, OnDestroy {
+  @Input() public movieId: number = -1;
 
   readonly movieService = inject(MovieService);
 
@@ -21,7 +27,7 @@ export class MoreInfosComponent implements OnInit, OnDestroy{
   constructor() {
     effect(() => {
       this.movie = this.movieService.movieById().value;
-    })
+    });
   }
 
   getMovieById() {

@@ -8,7 +8,7 @@ import { MovieListComponent } from './movie-list/movie-list.component';
   standalone: true,
   imports: [MovieListComponent],
   templateUrl: './movie-selector.component.html',
-  styleUrl: './movie-selector.component.scss',
+  styleUrls: ['./movie-selector.component.scss'],
 })
 export class MovieSelectorComponent implements OnInit {
   private readonly movieService = inject(MovieService);

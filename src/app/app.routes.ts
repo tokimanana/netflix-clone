@@ -5,5 +5,10 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent
+  },
+  {
+    path: 'search',
+    loadComponent: () =>
+      import('./search/search.component').then((m) => m.SearchComponent),
   }
 ];

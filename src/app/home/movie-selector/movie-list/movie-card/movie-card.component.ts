@@ -8,7 +8,7 @@ import { MovieService } from './../../../../service/movie.service';
   standalone: true,
   imports: [],
   templateUrl: './movie-card.component.html',
-  styleUrl: './movie-card.component.scss',
+  styleUrls: ['./movie-card.component.scss'],
 })
 export class MovieCardComponent {
   @Input() movie: Movie | undefined;

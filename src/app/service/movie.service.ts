@@ -30,35 +30,33 @@ export class MovieService {
   private fetchTrendMovies$: WritableSignal<
     State<MovieApiResponse, HttpErrorResponse>
   > = signal(
-    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
+    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build(),
   );
   fetchtrendMovie = computed(() => this.fetchTrendMovies$());
 
   private genres$: WritableSignal<State<GenresResponse, HttpErrorResponse>> =
     signal(
-      State.Builder<GenresResponse, HttpErrorResponse>().forInit().build()
+      State.Builder<GenresResponse, HttpErrorResponse>().forInit().build(),
     );
   genres = computed(() => this.genres$());
 
-  private movieById$: WritableSignal<
-    State<Movie, HttpErrorResponse>
-  > = signal(
-    State.Builder<Movie, HttpErrorResponse>().forInit().build()
+  private movieById$: WritableSignal<State<Movie, HttpErrorResponse>> = signal(
+    State.Builder<Movie, HttpErrorResponse>().forInit().build(),
   );
   movieById = computed(() => this.movieById$());
 
   private moviesByGenre$: WritableSignal<
     State<MovieApiResponse, HttpErrorResponse>
   > = signal(
-    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
+    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build(),
   );
   moviesByGenre = computed(() => this.moviesByGenre$());
 
-  private search$: WritableSignal<
-    State<MovieApiResponse, HttpErrorResponse>
-  > = signal(
-    State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build()
-  )
+  private search$: WritableSignal<State<MovieApiResponse, HttpErrorResponse>> =
+    signal(
+      State.Builder<MovieApiResponse, HttpErrorResponse>().forInit().build(),
+    );
+  search = computed(() => this.search$());
 
   getTrends(): void {
     this.http
@@ -70,13 +68,13 @@ export class MovieService {
           this.fetchTrendMovies$.set(
             State.Builder<MovieApiResponse, HttpErrorResponse>()
               .forSuccess(tmdbResponse)
-              .build()
+              .build(),
           ),
         error: (err) =>
           this.fetchTrendMovies$.set(
             State.Builder<MovieApiResponse, HttpErrorResponse>()
               .forError(err)
-              .build()
+              .build(),
           ),
       });
   }
@@ -84,7 +82,7 @@ export class MovieService {
   getHeaders(): HttpHeaders {
     return new HttpHeaders().set(
       'Authorization',
-      `Bearer ${environment.TMDB_API_KEY}`
+      `Bearer ${environment.TMDB_API_KEY}`,
     );
   }
 
@@ -98,13 +96,13 @@ export class MovieService {
           this.genres$.set(
             State.Builder<GenresResponse, HttpErrorResponse>()
               .forSuccess(genresResponse)
-              .build()
+              .build(),
           ),
         error: (err) =>
           this.genres$.set(
             State.Builder<GenresResponse, HttpErrorResponse>()
               .forError(err)
-              .build()
+              .build(),
           ),
       });
   }
@@ -125,14 +123,14 @@ export class MovieService {
           this.moviesByGenre$.set(
             State.Builder<MovieApiResponse, HttpErrorResponse>()
               .forSuccess(moviesByGenreResponse)
-              .build()
+              .build(),
           );
         },
         error: (err) =>
           this.moviesByGenre$.set(
             State.Builder<MovieApiResponse, HttpErrorResponse>()
               .forError(err)
-              .build()
+              .build(),
           ),
       });
   }
@@ -143,30 +141,33 @@ export class MovieService {
     return `https://image.tmdb.org/t/p/${size}/${id}`;
   }
 
-  getMovieById(id: number): void{
+  getMovieById(id: number): void {
+    const params = new HttpParams().set(
+      'api_key',
+      environment.accessToken || '',
+    );
     this.http
       .get<Movie>(`${this.baseUrl}/3/movie/${id}`, {
         headers: this.getHeaders(),
+        params: params,
       })
       .subscribe({
         next: (movieResponse) =>
           this.movieById$.set(
             State.Builder<Movie, HttpErrorResponse>()
               .forSuccess(movieResponse)
-              .build()
+              .build(),
           ),
         error: (err) =>
           this.movieById$.set(
-            State.Builder<Movie, HttpErrorResponse>()
-              .forError(err)
-              .build()
+            State.Builder<Movie, HttpErrorResponse>().forError(err).build(),
           ),
       });
   }
 
   clearMovieById(): void {
     this.movieById$.set(
-      State.Builder<Movie, HttpErrorResponse>().forInit().build()
+      State.Builder<Movie, HttpErrorResponse>().forInit().build(),
     );
   }
 
@@ -189,13 +190,13 @@ export class MovieService {
           this.search$.set(
             State.Builder<MovieApiResponse, HttpErrorResponse>()
               .forSuccess(searchResponse)
-              .build()
+              .build(),
           ),
         error: (err) =>
           this.search$.set(
             State.Builder<MovieApiResponse, HttpErrorResponse>()
               .forError(err)
-              .build()
+              .build(),
           ),
       });
   }

@@ -10,7 +10,7 @@ export type Mode = 'GENRE' | 'TREND';
   standalone: true,
   imports: [MovieCardComponent],
   templateUrl: './movie-list.component.html',
-  styleUrl: './movie-list.component.scss',
+  styleUrls: ['./movie-list.component.scss'],
 })
 export class MovieListComponent implements OnInit {
   @Input() genreId = -1;
@@ -30,7 +30,8 @@ export class MovieListComponent implements OnInit {
           this.moviesByGenre = movieByGenreResponse.results;
         }
       } else if (this.mode === 'TREND') {
-        const trendingMoviesResponse = this.movieService.fetchtrendMovie().value;
+        const trendingMoviesResponse =
+          this.movieService.fetchtrendMovie().value;
         if (trendingMoviesResponse) {
           this.trendMovies = trendingMoviesResponse.results;
         }
