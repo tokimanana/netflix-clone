@@ -174,6 +174,10 @@ export class MovieService {
   openMoreInfos(movieId: number): void {
     let moreInfoModal = this.modalService.open(MoreInfosComponent);
     moreInfoModal.componentInstance.movieId = movieId;
+    // ensure the modal component fetches the movie when opened programmatically
+    if (typeof moreInfoModal.componentInstance.getMovieById === 'function') {
+      moreInfoModal.componentInstance.getMovieById();
+    }
   }
 
   searchByTerm(term: string): void {

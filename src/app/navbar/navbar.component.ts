@@ -19,11 +19,11 @@ export class NavbarComponent {
   onSearch(searchInput: string) {
     this.searchTerm = searchInput;
     if (this.searchTerm.length >= 1) {
-      this.router.navigate(['/search'], {
+      this.router.navigate(['search'], {
         queryParams: { q: this.searchTerm },
       });
     } else if (this.searchTerm.length === 0) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['']);
     }
   }
 }

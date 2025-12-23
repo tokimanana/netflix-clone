@@ -5,6 +5,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { MovieService } from '../../service/movie.service';
 import { Movie } from '../../service/model/movie.model';
@@ -17,7 +19,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './more-infos.component.html',
   styleUrls: ['./more-infos.component.scss'],
 })
-export class MoreInfosComponent implements OnInit, OnDestroy {
+export class MoreInfosComponent implements OnInit, OnDestroy, OnChanges {
   @Input() public movieId: number = -1;
 
   readonly movieService = inject(MovieService);
@@ -35,7 +37,15 @@ export class MoreInfosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getMovieById();
+    if (this.movieId && this.movieId > 0) {
+      this.getMovieById();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['movieId'] && this.movieId && this.movieId > 0) {
+      this.getMovieById();
+    }
   }
 
   ngOnDestroy(): void {

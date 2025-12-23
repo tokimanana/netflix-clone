@@ -11,5 +11,5 @@ import { MoreInfosComponent } from './more-infos/more-infos.component';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  public movieId: number = 1;
+  public movieId: number = -1;
 }
