@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MovieService } from '../../service/movie.service';
 import { Movie } from '../../service/model/movie.model';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class MoreInfosComponent implements OnInit, OnDestroy{
 
-  public movieId: number = -1;
+  @Input() movieId: number = -1;
 
   readonly movieService = inject(MovieService);
 
